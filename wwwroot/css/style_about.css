@@ -1,0 +1,19 @@
+.navbar
+{
+    background-color: rgb(116, 94, 94);
+    
+}
+
+.navbar-nav 
+{
+   position: relative;
+   right: 85px;
+   gap: 20px;
+}
+
+.navbar-nav .nav-link
+{
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}

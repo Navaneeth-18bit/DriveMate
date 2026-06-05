@@ -1,0 +1,177 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.home-page {
+    background: #f6f0e6;
+    color: #1d1d1f;
+    overflow-x: hidden;
+    font-family: Poppins, sans-serif;
+}
+
+.hero-section {
+    position: relative;
+    min-height: calc(100vh - 72px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: clamp(3rem, 6vw, 5.5rem) 0 clamp(4.5rem, 8vw, 7rem);
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(90deg, rgba(6, 18, 35, 0.84) 0%, rgba(6, 18, 35, 0.62) 45%, rgba(6, 18, 35, 0.18) 100%),
+        url('/images/home-hero.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    transform: scale(1.03);
+}
+
+.hero-section::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 190px;
+    background: linear-gradient(to bottom, rgba(246, 240, 230, 0) 0%, #f6f0e6 100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 780px);
+    margin-left: clamp(1rem, 4vw, 4rem);
+    margin-right: clamp(1rem, 4vw, 4rem);
+    color: #ffffff;
+}
+
+.hero-content .main_heading {
+    margin: 0 0 1rem;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 0.95;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.hero-content .bio {
+    margin-top: 0;
+    max-width: 38rem;
+    padding: 1.5rem 1.6rem;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(9, 16, 29, 0.52);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+    font-size: 1.05rem;
+    font-weight: 400;
+}
+
+.hero-content .bio h2 {
+    color: #ffffff;
+    font-size: clamp(1.35rem, 2.6vw, 2rem);
+}
+
+.hero-content .bio p {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.hero-content .btn {
+    padding-inline: 1.35rem;
+    padding-block: 0.8rem;
+}
+
+.services,
+.user-dashboard,
+.Driver-dashboard {
+    position: relative;
+    z-index: 1;
+}
+
+.services {
+    margin-top: clamp(2rem, 5vw, 4rem);
+}
+
+.services_heading,
+.why-choose-us-heading,
+.user-dashboard h2,
+.Driver-dashboard h2 {
+    color: #16202d;
+    font-weight: 800;
+}
+
+.services li,
+.why-choose-us li,
+.user-dashboard .card,
+.Driver-dashboard {
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(22, 32, 45, 0.08) !important;
+    box-shadow: 0 16px 36px rgba(22, 32, 45, 0.08);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+}
+
+.services li h3,
+.why-choose-us li h3 {
+    color: #102033;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.services li p,
+.why-choose-us li p,
+.user-dashboard p,
+.Driver-dashboard p {
+    color: #334155;
+}
+
+.Driver-dashboard {
+    padding: 1.5rem;
+}
+
+.Driver-dashboard a {
+    color: #102033;
+    font-weight: 700;
+}
+
+
+.navbar
+{
+    background-color: rgb(102, 80, 80);
+    font-family: Poppins;
+}
+
+.navbar-nav 
+{
+   position: relative;
+   right: 85px;
+   gap: 20px;
+}
+
+.navbar-brand
+{
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+}
+
+
+.main_heading
+{
+    margin: 0;
+}
+
+.bio
+{
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 0;
+}
+
+.nav-links:hover
+{
+    color: rgb(118, 255, 6);
+}

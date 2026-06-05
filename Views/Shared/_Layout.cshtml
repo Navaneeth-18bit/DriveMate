@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - adminPage</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/adminPage.styles.css" asp-append-version="true" />
+</head>
+
+<body>
+    <header>
+        @{
+            var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+            var userName = Context.Session.GetString("UserName");
+            var isUserLoggedIn = !string.IsNullOrEmpty(Context.Session.GetString("UserId"));
+        }
+
+        @if (string.Equals(controller, "Admin", System.StringComparison.OrdinalIgnoreCase))
+        {
+            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand fw-bold" asp-area="" asp-controller="Admin" asp-action="Dashboard">Admin
+                        Panel</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                            <ul class="navbar-nav ms-auto align-items-center">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                                </li>
+                            </ul>
+                            <form asp-controller="Admin" asp-action="Logout" method="post" class="d-flex">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+            }
+        else
+            {
+                <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom shadow-sm">
+                    <div class="container-fluid">
+                        <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">DriveMate</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between gap-3">
+                            <ul class="navbar-nav ms-auto align-items-center">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                </li>
+                                @if (!isUserLoggedIn)
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About
+                                            Us</a>
+                                        </li>
+                                    }
+                                </ul>
+
+                                @if (isUserLoggedIn)
+                                {
+                                    <span class="navbar-text small text-muted d-none d-sm-inline">
+                                        Hello, @userName
+                                    </span>
+                                    <form asp-controller="User" asp-action="Logout" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                                    </form>
+                                }
+                                @if (isUserLoggedIn)
+                                {
+                                    <a asp-controller="Home" asp-action="Booking"
+                                       class="btn btn-warning fw-bold mb-0 text-decoration-none text-dark">
+                                        Book a Driver
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Home" asp-action="Login"
+                                       class="btn btn-warning fw-bold mb-0 text-decoration-none text-dark">
+                                        Book a Driver
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </nav>
+                }
+            </header>
+            <div class="container-fluid">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+
+            <footer class="border-top footer text-muted text-white text-center mt-5">
+                <div class="container text-white">
+                    &copy; 2026 - adminPage - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
+            </footer>
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>
+            @await RenderSectionAsync("Scripts", required: false)
+        </body>
+
+    </html>

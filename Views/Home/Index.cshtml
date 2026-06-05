@@ -1,0 +1,162 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    var isUserLoggedIn = !string.IsNullOrEmpty(Context.Session.GetString("UserId"));
+    var currentUserId = Context.Session.GetString("UserId");
+}
+@model adminPage.Models.User
+
+<link rel="stylesheet" href="~/css/style_home.css">
+@if (TempData["DriverCreated"] != null)
+{
+    <div class="modal fade" id="driverCreatedModal" tabindex="-1" aria-labelledby="driverCreatedModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="driverCreatedModalLabel">Driver Account Created</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @TempData["DriverCreated"]
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modalElement = document.getElementById('driverCreatedModal');
+            if (modalElement && window.bootstrap) {
+                new bootstrap.Modal(modalElement).show();
+            }
+        });
+    </script>
+}
+
+<div id="Home" class="home-page">
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="main_heading text-start">DriveMate</h1>
+
+            <div class="bio">
+
+                <h2 class="fw-bold mb-2">
+                    Hire Professional Drivers Anytime, Anywhere
+                </h2>
+
+                <p class="fs-5 mb-4">
+                    DriveMate connects you with verified and experienced drivers
+                    for personal trips, corporate needs, and special events.
+                </p>
+
+                @if (isUserLoggedIn)
+                {
+                    <a asp-controller="Home" asp-action="Booking"
+                       class="btn btn-warning fw-bold text-dark text-decoration-none">
+                        Book a Driver
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="Login"
+                       class="btn btn-warning fw-bold text-dark text-decoration-none">
+                        Book a Driver
+                    </a>
+                }
+
+            </div>
+        </div>
+    </section>
+
+    <div class="services container mb-5">
+
+        <h2 class="services_heading text-center">Our Services</h2>
+
+        <ul class="row list-unstyled mt-5 mx-4">
+
+            <li class="col-md-3 mb-4 border-success p-3">
+                <h3>Personal Driver Hiring</h3>
+                <p>Hire Drivers for personal trips and events.</p>
+            </li>
+
+            <li class="col-md-3 mb-4 border-success p-3">
+                <h3>Corporate Monthly Contracts</h3>
+                <p>Long-term driver solutions for businesses.</p>
+            </li>
+
+            <li class="col-md-3 mb-4 border-success p-3">
+                <h3>Event-Based Temporary Drivers</h3>
+                <p>Temporary drivers for special events.</p>
+            </li>
+
+            <li class="col-md-3 mb-4 border-success p-3">
+                <h3>Outstation Trip Drivers</h3>
+                <p>Drivers for trips outside the city.</p>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="user-dashboard container mt-5 p-4 border rounded">
+        <h2 class="text-center">User Dashboard</h2>
+        <p class="text-center">Quick links and info for users.</p>
+
+        <div class="row mt-4">
+            <div class="col-md-4  text-dark ">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">My Bookings</h5>
+                        <p class="card-text">View and manage your bookings.</p>
+                        @if (isUserLoggedIn)
+                        {
+                            <a asp-controller="Booking" asp-action="RecentBookings" asp-route-userId="@currentUserId"
+                               class="btn btn-primary">View Bookings</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Home" asp-action="Login" class="btn btn-primary">View Bookings</a>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4  text-dark">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Profile</h5>
+                        <p class="card-text">Update your profile details.</p>
+                        <a asp-controller="User" asp-action="Profile" class="btn btn-primary">My Profile</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4  text-dark">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Book a Driver</h5>
+                        <p class="card-text">Start a new booking request.</p>
+                        @if (isUserLoggedIn)
+                        {
+                            <a asp-controller="Home" asp-action="Booking" class="btn btn-warning text-dark">Book Now</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Home" asp-action="Login" class="btn btn-warning text-dark">Book Now</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!isUserLoggedIn)
+    {
+        <div class="Driver-dashboard container mt-5 p-4">
+            <h2 class="text-start"></h2>
+            <p class="text-start">Join our team of professional drivers.</p>
+            <p>Email us at example.com@gmail.com</p>
+        </div>
+    }
+</div>

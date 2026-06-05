@@ -1,0 +1,95 @@
+@{
+    ViewData["Title"] = "Create New User";
+
+    var labels = ViewBag.Labels as IDictionary<string, string> ?? new Dictionary<string, string>();
+
+    string GetLabel(string key, string fallback)
+    {
+        return labels.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value)
+            ? value
+            : fallback;
+    }
+}
+
+<h2 class="text-center">@ViewData["Title"]</h2>
+
+<form id="newUserForm" asp-controller="User" asp-action="Register" method="post" class="container mt-4"
+      style="max-width: 600px; border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label for="Name" class="form-label">@GetLabel("Name", "Full Name")</label>
+        <input type="text" id="Name" name="Name" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="Email" class="form-label">@GetLabel("Email", "Email")</label>
+        <input type="email" id="Email" name="Email" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="PhoneNumber" class="form-label">@GetLabel("Phone", "Phone")</label>
+        <input type="tel" id="PhoneNumber" name="PhoneNumber" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label for="DateOfBirth" class="form-label">@GetLabel("DateOfBirth", "Date of Birth")</label>
+        <input type="date" id="DateOfBirth" name="DateOfBirth" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">@GetLabel("Password", "Password")</label>
+        <input type="password" id="password" name="password" class="form-control" required />
+        <div id="passwordError" class="text-danger small mt-1"></div>
+    </div>
+
+    <div class="mb-3">
+        <label for="confirmPassword" class="form-label">@GetLabel("ConfirmPassword", "Confirm Password")</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required />
+        <div id="confirmError" class="text-danger small mt-1"></div>
+    </div>
+
+    <script>
+            (function () {
+                var form = document.getElementById('newUserForm');
+                var pw = document.getElementById('password');
+                var cpw = document.getElementById('confirmPassword');
+                var pwErr = document.getElementById('passwordError');
+                var cpwErr = document.getElementById('confirmError');
+
+                function validatePasswords() {
+                    var ok = true;
+                    pwErr.textContent = '';
+                    cpwErr.textContent = '';
+
+                    if (pw.value.length < 6) {
+                        pwErr.textContent = 'Password must be at least 6 characters.';
+                        ok = false;
+                    }
+
+                    if (pw.value !== cpw.value) {
+                        cpwErr.textContent = 'Passwords do not match.';
+                        ok = false;
+                    }
+
+                    return ok;
+                }
+
+                if (pw && cpw) {
+                    pw.addEventListener('input', validatePasswords);
+                    cpw.addEventListener('input', validatePasswords);
+                }
+
+                if (form) {
+                    form.addEventListener('submit', function (e) {
+                        if (!validatePasswords()) {
+                            e.preventDefault();
+                            pw.focus();
+                        }
+                    });
+                }
+            })();
+    </script>
+
+    <button type="submit" class="btn btn-primary">@GetLabel("SaveButton", "Create User")</button>
+</form>

@@ -1,0 +1,78 @@
+@model adminPage.Models.User
+@{
+    ViewData["Title"] = "User Registration";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4">
+                <h3 class="text-center mb-4">Create Account</h3>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <ul>
+                            @foreach (var modelState in ViewData.ModelState.Values)
+                            {
+                                @foreach (var error in modelState.Errors)
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <form asp-controller="User" asp-action="Register" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" asp-for="Name" placeholder="Enter your full name"
+                               required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" asp-for="Email" placeholder="Enter your email"
+                               required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" asp-for="PhoneNumber"
+                               placeholder="Enter your phone number" required />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" asp-for="DateOfBirth" required />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password"
+                               placeholder="Enter password (min 6 characters)" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" name="confirmPassword"
+                               placeholder="Confirm your password" required />
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <p>Already have an account? <a href="@Url.Action("Login", "User")">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+@model IEnumerable<User>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold">User Management</h3>
+    </div>
+
+    <div class="card shadow-sm rounded-3">
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Date of Birth</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@item.Name</td>
+                            <td>@item.Email</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.DateOfBirth.ToString("dd MMM yyyy")</td>
+
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning me-1">
+                                    <span class="visually-hidden">Edit</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                                         viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                        <path
+                                        d="M15.502 1.94a.5.5 0 0 1 0 .706l-1.793 1.793-2.647-2.647L12.855 0a.5.5 0 0 1 .707 0l1.94 1.94z" />
+                                        <path d="M10.707 2.646 3 10.354V13h2.646l7.708-7.707-2.647-2.647z" />
+                                        <path fill-rule="evenodd"
+                                              d="M1 13.5V16h2.5l8.147-8.146-2.5-2.5L1 13.5zM0 13.5 9.854 3.646l2.5 2.5L2.5 16H0v-2.5z" />
+                                    </svg>
+                                </a>
+
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                    <span class="visually-hidden">Delete</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                                         viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                                        <path
+                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5.5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6zm2 .5a.5.5 0 0 1 1 0v6a.5.5 0 0 1-1 0V6z" />
+                                        <path fill-rule="evenodd"
+                                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 1 1 0-2H5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1h2.5a1 1 0 0 1 1 1zM4 4v9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4H4z" />
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>

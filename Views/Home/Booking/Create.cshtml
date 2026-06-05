@@ -1,0 +1,129 @@
+@model adminPage.Models.Booking
+
+@{
+    ViewData["Title"] = "Book a Driver - DriveMate";
+    var currentUser = ViewBag.CurrentUser as adminPage.Models.User;
+}
+
+
+<link rel="stylesheet" href="~/css/booking_create.css" />
+
+
+<div class="booking-hero">
+    <div class="container">
+        <h1>Book Your Driver</h1>
+        <p>Quick, reliable, and affordable rides at your doorstep</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="booking-form-container">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <form asp-action="CreateBooking" method="post">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="form-validation-summary">
+                            <strong>Please fix the following errors:</strong>
+                            <ul>
+                                @foreach (var modelState in ViewData.ModelState.Values)
+                                {
+                                    @foreach (var error in modelState.Errors)
+                                    {
+                                        <li>@error.ErrorMessage</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <div class="booking-fields-row">
+                        <div class="form-group-booking">
+                            <label>Booking Profile</label>
+                            <input type="text" class="form-control"
+                                   value="@(currentUser?.Name ?? "Logged-in user") @(currentUser?.Email != null ? $"({currentUser.Email})" : "")"
+                                   readonly />
+                        </div>
+
+                        <div class="form-group-booking">
+                            <label asp-for="UserName">Name</label>
+                            <input asp-for="UserName" type="text" placeholder="Enter the passenger name"
+                                   class="form-control" required />
+                            <span asp-validation-for="UserName" class="error-message"></span>
+                        </div>
+
+                        <div class="form-group-booking">
+                            <label asp-for="PickupLocation">Pickup Location</label>
+                            <input asp-for="PickupLocation" type="text" placeholder="Enter your pickup location"
+                                   class="form-control" required />
+                            <span asp-validation-for="PickupLocation" class="error-message"></span>
+                        </div>
+
+                        <div class="form-group-booking">
+                            <label asp-for="StartTime">Pickup Date & Time</label>
+                            <input asp-for="StartTime" type="datetime-local" class="form-control"
+                                   value="@(Model.StartTime == default ? DateTime.Now.ToString("yyyy-MM-ddTHH:mm") : Model.StartTime.ToString("yyyy-MM-ddTHH:mm"))"
+                                   required />
+                            <span asp-validation-for="StartTime" class="error-message"></span>
+                        </div>
+
+                    </div>
+
+                    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <button type="submit" class="booking-btn">
+                            <i class="fas fa-check-circle"></i> Search Drivers
+                        </button>
+                        <a asp-action="Index" class="booking-btn cancel-btn"
+                           style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="available-drivers-panel">
+                    <h3 class="mb-3">Available Drivers</h3>
+                    @{
+                        var availableDrivers = ViewBag.AvailableDrivers as IEnumerable<adminPage.Models.Driver>;
+                    }
+
+                    @if (availableDrivers != null && availableDrivers.Any())
+                    {
+                        <div class="available-driver-grid">
+                            @foreach (var driver in availableDrivers)
+                            {
+                                <div class="available-driver-card @(driver.IsAvailable ? string.Empty : "opacity-75")">
+                                    <div class="driver-name">@driver.Name</div>
+                                    <div class="driver-basic-info">
+                                        <div><strong>Email:</strong> @(driver.Email ?? "-")</div>
+                                        <div><strong>Experience:</strong> @driver.Experience yrs</div>
+                                        <div><strong>Status:</strong>
+                                            @if (driver.IsAvailable)
+                                            {
+                                                <span class="badge bg-success">Available</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">Unavailable</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning mb-0">No drivers are currently available to book.</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

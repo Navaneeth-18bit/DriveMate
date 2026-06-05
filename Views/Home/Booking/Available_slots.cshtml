@@ -1,0 +1,208 @@
+@model adminPage.Models.Booking
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Available Drivers - DriveMate";
+}
+<link rel="stylesheet" href="~/css/available_slots.css" />
+
+<div class="slots-hero">
+    <div class="container">
+        <h1>Available Drivers</h1>
+        <p>Select your preferred driver for a safe and comfortable ride</p>
+    </div>
+</div>
+
+<div class="container">
+    <a href="javascript:history.back()" class="back-btn">← Back</a>
+
+    <div class="booking-details">
+        <h3>Your Booking Details</h3>
+        <div class="booking-info-row">
+            <div class="booking-info-item">
+                <label>Name:</label>
+                <span>@Model.UserName</span>
+            </div>
+            <div class="booking-info-item">
+                <label>Pickup:</label>
+                <span>@Model.PickupLocation</span>
+            </div>
+            <div class="booking-info-item">
+                <label>Date & Time:</label>
+                <span>@Model.StartTime.ToString("dd MMM yyyy, hh:mm tt")</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="drivers-container">
+        <h2>Select Your Driver</h2>
+
+        @{
+            var drivers = ViewBag.AvailableDrivers as IEnumerable<adminPage.Models.Driver>;
+            if (drivers != null && drivers.Any())
+            {
+                <form method="post" action="@Url.Action("ConfirmBooking", "Home")" id="bookingConfirmForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="bookingName" value="@Model.UserName" />
+                    <input type="hidden" name="bookingPickupLocation" value="@Model.PickupLocation" />
+                    <input type="hidden" name="bookingStartTime" value="@Model.StartTime" />
+
+                    <div class="drivers-grid">
+                        @foreach (var driver in drivers)
+                        {
+                            <div class="driver-card @(driver.IsAvailable ? string.Empty : "unavailable")"
+                                 data-driver-id="@driver.DriverId">
+                                <div class="driver-header">
+                                    <div class="driver-avatar">@(string.IsNullOrWhiteSpace(driver.Name) ? "-" :
+                                                                                                                                                    driver.Name.Substring(0, 1).ToUpper())</div>
+                                        <div>
+                                            <div class="driver-name">@(driver.Name ?? "-")</div>
+                                            <div class="driver-rating">
+                                                <span class="status-badge @(driver.IsAvailable ? "available" : "unavailable")">
+                                                    @(driver.IsAvailable ? "Available" : "Unavailable")
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="driver-info">
+                                        <div class="driver-info-row">
+                                            <label>Email:</label>
+                                            <span>@(driver.Email ?? "-")</span>
+                                        </div>
+                                        <div class="driver-info-row">
+                                            <label>Phone:</label>
+                                            <span>@(driver.PhoneNumber ?? "-")</span>
+                                        </div>
+                                        <div class="driver-info-row">
+                                            <label>Experience:</label>
+                                            <span>@driver.Experience yrs</span>
+                                        </div>
+                                    </div>
+
+                                    @if (driver.IsAvailable)
+                                    {
+                                        <button type="button" class="select-driver-btn" onclick="selectDriver(@driver.DriverId, this)">
+                                            Select Driver
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="select-driver-btn" disabled>
+                                            Unavailable
+                                        </button>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        <div class="confirm-section">
+                            <input type="hidden" name="selectedDriverId" id="selectedDriverId" value="" />
+                            <button type="button" class="confirm-btn" id="confirmBtn" data-bs-toggle="modal"
+                                    data-bs-target="#confirmBookingModal" disabled>
+                                Confirm Booking
+                            </button>
+                        </div>
+                    </form>
+                }
+            else
+                {
+                    <div class="no-drivers">
+                        <p>😔 No drivers are registered yet.</p>
+                        <p>Once drivers are added, their availability will show here.</p>
+                        <a href="@Url.Action("Booking", "Home")" class="btn btn-primary">Book Again</a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmBookingModal" tabindex="-1" aria-labelledby="confirmBookingModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header booking-modal-header">
+                    <h5 class="modal-title" id="confirmBookingModalLabel">Confirm Booking</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="booking-summary-grid">
+                        <div class="booking-summary-item">
+                            <strong>Name</strong>
+                            <span id="summaryName">@Model.UserName</span>
+                        </div>
+                        <div class="booking-summary-item">
+                            <strong>Pickup</strong>
+                            <span id="summaryPickup">@Model.PickupLocation</span>
+                        </div>
+                        <div class="booking-summary-item">
+                            <strong>Pickup Date & Time</strong>
+                            <span id="summaryStart">@Model.StartTime.ToString("dd MMM yyyy, hh:mm tt")</span>
+                        </div>
+                        <div class="booking-summary-item">
+                            <strong>Driver</strong>
+                            <span id="summaryDriver">Not selected</span>
+                        </div>
+                    </div>
+                    <p class="mb-0 text-muted">Click confirm to create the booking and mark the driver as unavailable.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" form="bookingConfirmForm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDriverId = null;
+        let selectedButton = null;
+        let selectedDriverName = null;
+
+        function selectDriver(driverId, button) {
+            if (button.disabled) {
+                return;
+            }
+
+            // Remove previous selection
+            if (selectedButton) {
+                selectedButton.classList.remove('selected');
+            }
+
+            // Add selection to new driver
+            selectedButton = button;
+            selectedButton.classList.add('selected');
+            selectedDriverId = driverId;
+            selectedDriverName = button.closest('.driver-card')?.querySelector('.driver-name')?.textContent?.trim() || 'Selected driver';
+
+            // Update hidden input
+            document.getElementById('selectedDriverId').value = driverId;
+
+            // Enable confirm button
+            document.getElementById('confirmBtn').disabled = false;
+
+            const summaryDriver = document.getElementById('summaryDriver');
+            if (summaryDriver) {
+                summaryDriver.textContent = selectedDriverName;
+            }
+
+            // Highlight the card
+            document.querySelectorAll('.driver-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            button.closest('.driver-card').classList.add('selected');
+        }
+
+        document.getElementById('confirmBookingModal')?.addEventListener('show.bs.modal', function (event) {
+            if (!selectedDriverId) {
+                event.preventDefault();
+                return;
+            }
+
+            const summaryDriver = document.getElementById('summaryDriver');
+            if (summaryDriver && selectedDriverName) {
+                summaryDriver.textContent = selectedDriverName;
+            }
+        });
+    </script>

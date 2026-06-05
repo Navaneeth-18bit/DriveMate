@@ -1,0 +1,28 @@
+@model adminPage.Models.User
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+
+    <div>
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div>
+        <label>Phone</label>
+        <input asp-for="PhoneNumber" class="form-control" />
+    </div>
+
+    <div>
+        <label>Date of Birth</label>
+        <input asp-for="DateOfBirth" type="date" class="form-control" />
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

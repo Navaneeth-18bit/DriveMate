@@ -1,0 +1,141 @@
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    <style>
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #0f172a, #1e293b);
+            }
+
+            .login-card {
+                width: 100%;
+                max-width: 420px;
+                background: #fff;
+                border-radius: 16px;
+                padding: 32px;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, .25);
+            }
+
+            h1 {
+                margin: 0 0 8px;
+                color: #111827;
+            }
+
+            p {
+                margin: 0 0 24px;
+                color: #6b7280;
+            }
+
+            .form-group {
+                margin-bottom: 16px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 600;
+                color: #374151;
+            }
+
+            input {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 12px 14px;
+                border: 1px solid #d1d5db;
+                border-radius: 10px;
+                font-size: 14px;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: #2563eb;
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+            }
+
+            .btn {
+                width: 100%;
+                border: 0;
+                border-radius: 10px;
+                padding: 12px 16px;
+                background: #2563eb;
+                color: #fff;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+            .btn:hover {
+                background: #1d4ed8;
+            }
+
+            .message {
+                margin-bottom: 16px;
+                padding: 10px 12px;
+                border-radius: 8px;
+                background: #eff6ff;
+                color: #1d4ed8;
+            }
+
+            .links {
+                margin-top: 16px;
+                text-align: center;
+            }
+
+            .links a {
+                color: #2563eb;
+                text-decoration: none;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="login-card">
+        <h1>Login</h1>
+        <p>Sign in to manage users.</p>
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="message">@TempData["Message"]</div>
+        }
+
+        <form asp-controller="User" asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="Username">Username</label>
+                <input type="text" id="Username" name="Username" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <input type="email" id="Email" name="Email" required />
+            </div>
+
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <input type="password" id="Password" name="Password" required />
+            </div>
+
+            <button type="submit" class="btn">Login</button>
+        </form>
+
+        <div class="links">
+            <a asp-controller="Home" asp-action="NewUser">Create a new user</a>
+        </div>
+    </div>
+</body>
+
+</html>
